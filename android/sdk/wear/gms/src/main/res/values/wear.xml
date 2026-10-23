@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Identifies reachable phone nodes that can publish CoMaps map/route state. -->
+  <string-array name="android_wear_capabilities" translatable="false">
+    <item>comaps_phone_app</item>
+  </string-array>
+</resources>

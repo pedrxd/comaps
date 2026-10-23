@@ -103,6 +103,11 @@ jobs:
           CMAKE_CXX_COMPILER_LAUNCHER: ccache
         run: ./gradlew -P${{ matrix.arch }} test${{ matrix.flavor }}UnitTest test${{ matrix.type }}UnitTest assemble${{ matrix.flavor }}
 
+      - name: Compile Wear Google Debug
+        shell: bash
+        working-directory: android
+        run: ./gradlew :wear:assembleGoogleDebug :libs:wear-protocol:testDebugUnitTest :sdk:wear:core:testDebugUnitTest :wear:testGoogleDebugUnitTest
+
       - name: Upload apk
         uses: actions/upload-artifact@v3
         with:

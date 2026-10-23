@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Displayed in the Wear OS app when no route is assigned on the phone. -->
+    <string name="wear_no_route_message">Open CoMaps on your phone and create a route to see it here.</string>
+</resources>
