@@ -1,0 +1,6 @@
+<resources>
+  <dimen name="screen_padding">16dp</dimen>
+  <dimen name="route_stroke_width">4dp</dimen>
+  <dimen name="my_position_radius">6dp</dimen>
+  <dimen name="my_position_stroke_width">2dp</dimen>
+</resources>

@@ -127,6 +127,7 @@ import app.organicmaps.util.UiUtils;
 import app.organicmaps.util.Utils;
 import app.organicmaps.util.bottomsheet.MenuBottomSheetFragment;
 import app.organicmaps.util.bottomsheet.MenuBottomSheetItem;
+import app.organicmaps.wear.WearMapSnapshotPublisher;
 import app.organicmaps.widget.StackedButtonsDialog;
 import app.organicmaps.widget.menu.MainMenu;
 import app.organicmaps.widget.placepage.PlacePageController;
@@ -173,6 +174,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @SuppressWarnings("NotNullFieldNotInitialized")
   @NonNull
   private MapController mMapController;
+  @Nullable
+  private WearMapSnapshotPublisher mWearPublisher;
 
   private View mPointChooser;
   private MaterialToolbar mPointChooserToolbar;
@@ -613,6 +616,10 @@ public class MwmActivity extends BaseMwmFragmentActivity
     mMapController = new MapController(findViewById(R.id.map), MwmApplication.from(this).getLocationHelper(), this,
                                        this::reportUnsupported, isLaunchByDeeplink);
     getLifecycle().addObserver(mMapController);
+
+    // Mirror the active route and map to a paired Wear OS watch (read-only on the watch).
+    mWearPublisher = new WearMapSnapshotPublisher(mMapController.getView());
+    mWearPublisher.start();
 
     initNavigationButtons();
 
@@ -1251,6 +1258,11 @@ public class MwmActivity extends BaseMwmFragmentActivity
     MwmApplication.from(getApplicationContext()).getIsolinesManager().detach();
     mSearchController.detach();
     Utils.keepScreenOn(false, getWindow());
+    if (mWearPublisher != null)
+    {
+      mWearPublisher.stop();
+      mWearPublisher = null;
+    }
 
     final String backUrl = Framework.nativeGetParsedBackUrl();
     if (!TextUtils.isEmpty(backUrl))
@@ -1964,6 +1976,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
     RoutingInfo info = Framework.nativeGetRouteFollowingInfo();
     routing.updateCachedRoutingInfo(info);
     mNavigationController.update(info);
+    if (mWearPublisher != null)
+      mWearPublisher.onLocationUpdated(location);
   }
 
   @Override

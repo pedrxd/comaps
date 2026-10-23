@@ -19,3 +19,7 @@ dependencyResolutionManagement {
 rootProject.name = "CoMaps"
 include(":app")
 include(":sdk")
+include(":libs:wear-protocol")
+include(":sdk:wear:core")
+include(":sdk:wear:gms")
+include(":wear")

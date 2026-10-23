@@ -358,6 +358,11 @@ androidComponents {
 
 dependencies {
     implementation(project(":sdk"))
+    // Wear OS phone-side bridge: the all-flavors seam (interface + registry + no-op) plus the Google
+    // Wear Data Layer publisher, which self-registers and ships in Google debug/beta builds only.
+    implementation(project(":sdk:wear:core"))
+    googleDebugImplementation(project(":sdk:wear:gms"))
+    googleBetaImplementation(project(":sdk:wear:gms"))
     coreLibraryDesugaring(libs.android.tools.desugar)
 
     // Google Play Location Services

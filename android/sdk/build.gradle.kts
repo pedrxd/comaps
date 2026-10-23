@@ -127,6 +127,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.core)
     coreLibraryDesugaring(libs.android.tools.desugar)
 }
 

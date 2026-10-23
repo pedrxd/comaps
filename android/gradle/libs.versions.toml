@@ -9,6 +9,7 @@ androidGradlePlugin = "8.13.2"
 androidToolsDesugar = "2.1.5"
 tripletPlayPublisher = "3.13.0"
 microgServicesLocation = "0.3.14.250932"
+googleGmsWearable = "19.0.0"
 appDevNextAndroidChart = "3.1.0.31"
 
 # Testing
@@ -43,6 +44,7 @@ android-tools-desugar = { module = "com.android.tools:desugar_jdk_libs", version
 triplet-play-publisher = { module = "com.github.triplet.gradle:play-publisher", version.ref = "tripletPlayPublisher" }
 appdevnext-androidchart = { module = "com.github.AppDevNext:AndroidChart", version.ref = "appDevNextAndroidChart" }
 microg-services-location = { module = "org.microg.gms:play-services-location", version.ref = "microgServicesLocation" }
+google-gms-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "googleGmsWearable" }
 
 # Testing
 junit = { module = "junit:junit", version.ref = "jUnit" }

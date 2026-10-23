@@ -16,6 +16,7 @@ import app.organicmaps.sdk.util.log.Logger;
 import app.organicmaps.sdk.widget.placepage.CoordinatesFormat;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.chromium.base.ObserverList;
 
 @androidx.annotation.UiThread
 public class RoutingController
@@ -66,10 +67,23 @@ public class RoutingController
     default void onStartRouteBuilding() {}
   }
 
+  /**
+   * Process-scoped observer of navigation start/stop, independent of the UI {@link Container}. Fires
+   * on every transition into or out of {@link State#NAVIGATION}, whatever the trigger -- phone UI,
+   * Android Auto, notification stop, or route finished.
+   */
+  public interface NavigationStateListener
+  {
+    void onNavigationStateChanged(boolean active);
+  }
+
   private static final RoutingController sInstance = new RoutingController();
 
   @Nullable
   private Container mContainer;
+
+  @NonNull
+  private final ObserverList<NavigationStateListener> mNavigationStateListeners = new ObserverList<>();
 
   private BuildState mBuildState = BuildState.NONE;
   private State mState = State.NONE;
@@ -232,10 +246,28 @@ public class RoutingController
     return mLastResultCode != ResultCodes.NEED_MORE_MAPS && !isRulerRouterType() && RoutingOptions.hasAnyOptions(mLastRouterType);
   }
 
+  public void addNavigationStateListener(@NonNull NavigationStateListener listener)
+  {
+    mNavigationStateListeners.addObserver(listener);
+  }
+
+  public void removeNavigationStateListener(@NonNull NavigationStateListener listener)
+  {
+    mNavigationStateListeners.removeObserver(listener);
+  }
+
   private void setState(State newState)
   {
     Logger.d(TAG, "[S] State: " + mState + " -> " + newState + ", BuildState: " + mBuildState);
+    final boolean wasNavigating = mState == State.NAVIGATION;
     mState = newState;
+    final boolean isNavigating = mState == State.NAVIGATION;
+
+    if (isNavigating != wasNavigating)
+    {
+      for (final NavigationStateListener listener : mNavigationStateListeners)
+        listener.onNavigationStateChanged(isNavigating);
+    }
 
     if (mContainer != null)
       mContainer.updateMenu();
